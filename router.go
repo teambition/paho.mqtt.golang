@@ -156,7 +156,6 @@ func (r *router) matchAndDispatch(messages <-chan *packets.PublishPacket, order 
 							hd := e.Value.(*route).callback
 							go func() {
 								hd(client, m)
-								m.Ack()
 							}()
 						}
 						sent = true
@@ -168,7 +167,6 @@ func (r *router) matchAndDispatch(messages <-chan *packets.PublishPacket, order 
 					} else {
 						go func() {
 							r.defaultHandler(client, m)
-							m.Ack()
 						}()
 					}
 				}
@@ -176,7 +174,6 @@ func (r *router) matchAndDispatch(messages <-chan *packets.PublishPacket, order 
 				for _, handler := range handlers {
 					func() {
 						handler(client, m)
-						m.Ack()
 					}()
 				}
 			case <-r.stop:
